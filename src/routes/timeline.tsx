@@ -32,7 +32,10 @@ function Timeline() {
   const add = async () => {
     if (!f.title.trim()) return;
     const { error } = await supabase.from("timeline_events").insert({ ...f, era: f.era || null, sort_order: (data?.length ?? 0) + 1 });
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     setF({ title: "", era: "", description: "" }); setAdding(false);
     qc.invalidateQueries({ queryKey: ["timeline"] });
   };

@@ -111,19 +111,19 @@ function Ingest() {
         <div className="mt-12 grid gap-10">
           <Group title="New entries" empty="No new characters or groups found.">
             {result.new_entities.map((e, i) => (
-              <Item key={i} checked={sel.e[i]} onToggle={() => toggle("e", i)} quote={e.quote}
+              <Item key={i} checked={!!sel.e[i]} onToggle={() => toggle("e", i)} quote={e.quote}
                 title={`${e.name}${e.alias ? ` “${e.alias}”` : ""}`} meta={[e.kind, e.role, e.status].filter(Boolean).join(" · ")} body={e.description} />
             ))}
           </Group>
           <Group title="Additions to existing entries" empty="No new details for existing entries.">
             {result.updates.map((u, i) => (
-              <Item key={i} checked={sel.u[i]} onToggle={() => toggle("u", i)} quote={u.quote}
+              <Item key={i} checked={!!sel.u[i]} onToggle={() => toggle("u", i)} quote={u.quote}
                 title={u.existing_name} meta={u.status ? `Status → ${u.status}` : ""} body={u.new_facts} />
             ))}
           </Group>
           <Group title="Timeline events" empty="No events found.">
             {result.events.map((v, i) => (
-              <Item key={i} checked={sel.v[i]} onToggle={() => toggle("v", i)} quote={v.quote} title={v.title} meta={v.era ?? ""} body={v.description} />
+              <Item key={i} checked={!!sel.v[i]} onToggle={() => toggle("v", i)} quote={v.quote} title={v.title} meta={v.era ?? ""} body={v.description} />
             ))}
           </Group>
           <Button onClick={save} disabled={stage === "saving"}>{stage === "saving" ? "Saving…" : "Approve & save selected"}</Button>
