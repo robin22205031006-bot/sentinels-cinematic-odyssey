@@ -14,16 +14,173 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      entities: {
+        Row: {
+          alias: string | null
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          kind: Database["public"]["Enums"]["entity_kind"]
+          locked_fields: string[]
+          name: string
+          role: string | null
+          stats: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          alias?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          kind: Database["public"]["Enums"]["entity_kind"]
+          locked_fields?: string[]
+          name: string
+          role?: string | null
+          stats?: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          alias?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          kind?: Database["public"]["Enums"]["entity_kind"]
+          locked_fields?: string[]
+          name?: string
+          role?: string | null
+          stats?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ingest_jobs: {
+        Row: {
+          created_at: string
+          filename: string
+          id: string
+          summary: Json
+        }
+        Insert: {
+          created_at?: string
+          filename: string
+          id?: string
+          summary?: Json
+        }
+        Update: {
+          created_at?: string
+          filename?: string
+          id?: string
+          summary?: Json
+        }
+        Relationships: []
+      }
+      lore_notes: {
+        Row: {
+          created_at: string
+          entity_id: string
+          id: string
+          source: string | null
+          text: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          id?: string
+          source?: string | null
+          text: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          id?: string
+          source?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lore_notes_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      timeline_events: {
+        Row: {
+          created_at: string
+          description: string
+          era: string | null
+          id: string
+          sort_order: number
+          source: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          era?: string | null
+          id?: string
+          sort_order?: number
+          source?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          era?: string | null
+          id?: string
+          sort_order?: number
+          source?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      entity_kind:
+        | "character"
+        | "organization"
+        | "clan"
+        | "bloodline"
+        | "faction"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +307,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      entity_kind: [
+        "character",
+        "organization",
+        "clan",
+        "bloodline",
+        "faction",
+      ],
+    },
   },
 } as const
