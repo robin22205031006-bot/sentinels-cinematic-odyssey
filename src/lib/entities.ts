@@ -8,7 +8,8 @@ export type TimelineEvent = Tables<"timeline_events">;
 
 export const CHARACTER_STATUSES = ["Alive", "Dead", "Retired", "Missing", "Legend"];
 export const GROUP_STATUSES = ["Active", "Inactive"];
-export const GROUP_KINDS = ["organization", "clan", "bloodline", "faction"] as const;
+export const CHARACTER_CATEGORIES = ["Protagonist", "Antagonist", "Anti-Hero", "Anti-Villain", "Support"];
+export const GROUP_CATEGORIES = ["Faction", "Black Ops Team", "Clan", "Organization", "Cult", "Bloodline"];
 
 export const entitiesQuery = (kinds: string[]) =>
   queryOptions({
@@ -56,4 +57,11 @@ export async function fileToDataUrl(file: File, max = 640): Promise<string> {
   c.height = Math.round(bmp.height * scale);
   c.getContext("2d")!.drawImage(bmp, 0, 0, c.width, c.height);
   return c.toDataURL("image/jpeg", 0.82);
+}
+
+/** Case-insensitive match on name, alias, role or category. */
+export function matchesSearch(e: Pick<Entity, "name" | "alias" | "role" | "category">, q: string): boolean {
+  const s = q.trim().toLowerCase();
+  if (!s) return true;
+  return [e.name, e.alias, e.role, e.category].some((v) => v?.toLowerCase().includes(s));
 }

@@ -14,9 +14,115 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      banned_users: {
+        Row: {
+          banned_by: string | null
+          created_at: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          banned_by?: string | null
+          created_at?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          banned_by?: string | null
+          created_at?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      banned_words: {
+        Row: {
+          created_at: string
+          id: string
+          word: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          word: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          word?: string
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          author_id: string
+          author_name: string | null
+          body: string
+          created_at: string
+          id: string
+          parent_id: string | null
+          post_id: string
+        }
+        Insert: {
+          author_id?: string
+          author_name?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       entities: {
         Row: {
           alias: string | null
+          category: string | null
           created_at: string
           description: string
           id: string
@@ -25,12 +131,14 @@ export type Database = {
           locked_fields: string[]
           name: string
           role: string | null
+          sketches: string[]
           stats: Json
           status: string
           updated_at: string
         }
         Insert: {
           alias?: string | null
+          category?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -39,12 +147,14 @@ export type Database = {
           locked_fields?: string[]
           name: string
           role?: string | null
+          sketches?: string[]
           stats?: Json
           status?: string
           updated_at?: string
         }
         Update: {
           alias?: string | null
+          category?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -53,6 +163,7 @@ export type Database = {
           locked_fields?: string[]
           name?: string
           role?: string | null
+          sketches?: string[]
           stats?: Json
           status?: string
           updated_at?: string
@@ -112,12 +223,85 @@ export type Database = {
           },
         ]
       }
+      post_votes: {
+        Row: {
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          post_id: string
+          user_id?: string
+        }
+        Update: {
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          author_name: string | null
+          body: string
+          created_at: string
+          id: string
+          title: string
+        }
+        Insert: {
+          author_id?: string
+          author_name?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          title: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       timeline_events: {
         Row: {
           created_at: string
           description: string
           era: string | null
           id: string
+          impact: number
+          series: string | null
           sort_order: number
           source: string | null
           title: string
@@ -127,6 +311,8 @@ export type Database = {
           description?: string
           era?: string | null
           id?: string
+          impact?: number
+          series?: string | null
           sort_order?: number
           source?: string | null
           title: string
@@ -136,6 +322,8 @@ export type Database = {
           description?: string
           era?: string | null
           id?: string
+          impact?: number
+          series?: string | null
           sort_order?: number
           source?: string | null
           title?: string
@@ -160,6 +348,33 @@ export type Database = {
         }
         Relationships: []
       }
+      vault_documents: {
+        Row: {
+          created_at: string
+          downloadable: boolean
+          file_path: string
+          id: string
+          is_public: boolean
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          downloadable?: boolean
+          file_path: string
+          id?: string
+          is_public?: boolean
+          title: string
+        }
+        Update: {
+          created_at?: string
+          downloadable?: boolean
+          file_path?: string
+          id?: string
+          is_public?: boolean
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -172,9 +387,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_banned: { Args: { _uid: string }; Returns: boolean }
+      is_staff: { Args: { _uid: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "moderator"
       entity_kind:
         | "character"
         | "organization"
@@ -308,7 +525,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "moderator"],
       entity_kind: [
         "character",
         "organization",

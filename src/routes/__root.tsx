@@ -11,6 +11,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { SiteNav } from "@/components/site-nav";
+import { AppearanceProvider } from "@/hooks/use-appearance";
 import { supabase } from "@/integrations/supabase/client";
 
 import appCss from "../styles.css?url";
@@ -124,11 +125,18 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event) => {
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       queryClient.invalidateQueries({ queryKey: ["session"] });
-      queryClient.invalidateQueries({ queryKey: ["is-admin"] });
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
+      if (event === "SIGNED_IN" && session) {
+        const key = `scu-logged-${session.user.id}-${new Date().toDateString()}`;
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, "1");
+          void supabase.from("activity_log").insert({ user_id: session.user.id, action: "Signed in" });
+        }
+      }
     });
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);
@@ -136,9 +144,13 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <SiteNav />
-      <Outlet />
-      <Toaster />
+      <AppearanceProvider>
+        <div className="ambient-bg min-h-screen">
+          <SiteNav />
+          <Outlet />
+        </div>
+        <Toaster />
+      </AppearanceProvider>
     </QueryClientProvider>
   );
 }
