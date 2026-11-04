@@ -11,6 +11,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin } from "@/hooks/use-admin";
 import { entitiesQuery, notesQuery, type Entity } from "@/lib/entities";
 import { EntityDialog } from "./entity-dialog";
+import { useWebMCP } from "use-webmcp-tool";
+import { runWebMCPTool } from "@/lib/webmcp-telemetry";
 
 const statusClass: Record<string, string> = {
   Alive: "text-status-alive", Active: "text-status-alive",
@@ -65,6 +67,30 @@ export function EntitySection({
   const [deleting, setDeleting] = useState<Entity | null>(null);
   const [filter, setFilter] = useState<string>("all");
   const list = (data ?? []).filter((e) => filter === "all" || e.kind === filter);
+
+  useWebMCP({
+    name: "list_archive_entries",
+    description: `List the ${title} entries currently shown on this page.`,
+    annotations: { readOnlyHint: true, untrustedContentHint: true },
+    execute: () =>
+      runWebMCPTool("list_archive_entries", () =>
+        isLoading ? "Still loading." : list.length === 0 ? "No entries shown." : list.map((e) => `${e.id}: ${e.name} (${e.kind}, ${e.status})`).join("\n"),
+      ),
+  });
+
+  useWebMCP({
+    name: "open_dossier",
+    description: "Expand one shown entry's dossier on screen.",
+    inputSchema: { type: "object", properties: { id: { type: "string", description: "Entry id from list_archive_entries." } }, required: ["id"] },
+    annotations: { untrustedContentHint: true },
+    execute: ({ id }: { id: string }) =>
+      runWebMCPTool("open_dossier", () => {
+        const e = list.find((x) => x.id === id);
+        if (!e) throw new Error("That entry is not in the current view.");
+        setOpen(e.id);
+        return `Opened ${e.name}.`;
+      }),
+  });
 
   const doDelete = async () => {
     if (!deleting) return;
