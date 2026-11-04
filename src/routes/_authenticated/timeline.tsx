@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useIsAdmin } from "@/hooks/use-admin";
 import { timelineQuery } from "@/lib/entities";
 
-export const Route = createFileRoute("/timeline")({
+export const Route = createFileRoute("/_authenticated/timeline")({
   head: () => ({
     meta: [
       { title: "Timeline — Sentinels Cinematic Universe" },

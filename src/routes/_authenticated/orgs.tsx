@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EntitySection } from "@/components/entity-section";
 
-export const Route = createFileRoute("/orgs")({
+export const Route = createFileRoute("/_authenticated/orgs")({
   head: () => ({
     meta: [
       { title: "Orgs & Bloodlines — Sentinels Cinematic Universe" },
