@@ -42,10 +42,13 @@ export function EntityDialog({
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
 
   const save = async () => {
-    if (!form.name.trim()) return toast.error("Name is required");
+    if (!form.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
     setSaving(true);
     const stats = Object.fromEntries(
-      form.stats.split("\n").map((l) => l.split(":")).filter((p) => p.length >= 2 && p[0].trim()).map(([k, ...v]) => [k.trim(), v.join(":").trim()]),
+      form.stats.split("\n").map((l) => l.split(":")).filter((p) => p.length >= 2 && (p[0] ?? "").trim()).map(([k, ...v]) => [(k ?? "").trim(), v.join(":").trim()]),
     );
     const row = {
       kind,
@@ -68,7 +71,10 @@ export function EntityDialog({
       ({ error } = await supabase.from("entities").insert({ ...row, locked_fields: [...FIELDS] }));
     }
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success(entity ? "Saved" : "Created");
     qc.invalidateQueries({ queryKey: ["entities"] });
     onOpenChange(false);

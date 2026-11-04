@@ -139,7 +139,7 @@ export function EntitySection({
 
       {editing !== undefined && (
         <EntityDialog key={editing?.id ?? "new"} open onOpenChange={(o) => !o && setEditing(undefined)}
-          entity={editing} defaultKind={kinds[0]} allowedKinds={kinds} />
+          entity={editing} defaultKind={kinds[0] ?? "character"} allowedKinds={kinds} />
       )}
       <AlertDialog open={!!deleting} onOpenChange={(o) => !o && setDeleting(null)}>
         <AlertDialogContent>

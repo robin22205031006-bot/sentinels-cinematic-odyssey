@@ -64,7 +64,7 @@ export interface MergeTarget {
 export function buildUpdatePatch(target: MergeTarget, update: ProposedUpdate): Record<string, string> {
   const patch: Record<string, string> = {};
   if (update.status && !target.locked_fields.includes("status") && update.status !== target.status) {
-    patch.status = update.status;
+    patch["status"] = update.status;
   }
   return patch;
 }
