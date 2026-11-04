@@ -14,7 +14,9 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAiRouteImport } from './routes/_authenticated/ai'
 import { Route as AuthenticatedCharactersRouteImport } from './routes/_authenticated/characters'
+import { Route as AuthenticatedFandomRouteImport } from './routes/_authenticated/fandom'
 import { Route as AuthenticatedIngestRouteImport } from './routes/_authenticated/ingest'
 import { Route as AuthenticatedOrgsRouteImport } from './routes/_authenticated/orgs'
 import { Route as AuthenticatedTimelineRouteImport } from './routes/_authenticated/timeline'
@@ -45,9 +47,19 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAiRoute = AuthenticatedAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCharactersRoute = AuthenticatedCharactersRouteImport.update({
   id: '/characters',
   path: '/characters',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFandomRoute = AuthenticatedFandomRouteImport.update({
+  id: '/fandom',
+  path: '/fandom',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedIngestRoute = AuthenticatedIngestRouteImport.update({
@@ -76,7 +88,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/ai': typeof AuthenticatedAiRoute
   '/characters': typeof AuthenticatedCharactersRoute
+  '/fandom': typeof AuthenticatedFandomRoute
   '/ingest': typeof AuthenticatedIngestRoute
   '/orgs': typeof AuthenticatedOrgsRoute
   '/timeline': typeof AuthenticatedTimelineRoute
@@ -87,7 +101,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/ai': typeof AuthenticatedAiRoute
   '/characters': typeof AuthenticatedCharactersRoute
+  '/fandom': typeof AuthenticatedFandomRoute
   '/ingest': typeof AuthenticatedIngestRoute
   '/orgs': typeof AuthenticatedOrgsRoute
   '/timeline': typeof AuthenticatedTimelineRoute
@@ -100,7 +116,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/ai': typeof AuthenticatedAiRoute
   '/_authenticated/characters': typeof AuthenticatedCharactersRoute
+  '/_authenticated/fandom': typeof AuthenticatedFandomRoute
   '/_authenticated/ingest': typeof AuthenticatedIngestRoute
   '/_authenticated/orgs': typeof AuthenticatedOrgsRoute
   '/_authenticated/timeline': typeof AuthenticatedTimelineRoute
@@ -113,7 +131,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/ai'
     | '/characters'
+    | '/fandom'
     | '/ingest'
     | '/orgs'
     | '/timeline'
@@ -124,7 +144,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/ai'
     | '/characters'
+    | '/fandom'
     | '/ingest'
     | '/orgs'
     | '/timeline'
@@ -136,7 +158,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/ai'
     | '/_authenticated/characters'
+    | '/_authenticated/fandom'
     | '/_authenticated/ingest'
     | '/_authenticated/orgs'
     | '/_authenticated/timeline'
@@ -189,11 +213,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/ai': {
+      id: '/_authenticated/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AuthenticatedAiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/characters': {
       id: '/_authenticated/characters'
       path: '/characters'
       fullPath: '/characters'
       preLoaderRoute: typeof AuthenticatedCharactersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fandom': {
+      id: '/_authenticated/fandom'
+      path: '/fandom'
+      fullPath: '/fandom'
+      preLoaderRoute: typeof AuthenticatedFandomRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/ingest': {
@@ -228,14 +266,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAiRoute: typeof AuthenticatedAiRoute
   AuthenticatedCharactersRoute: typeof AuthenticatedCharactersRoute
+  AuthenticatedFandomRoute: typeof AuthenticatedFandomRoute
   AuthenticatedIngestRoute: typeof AuthenticatedIngestRoute
   AuthenticatedOrgsRoute: typeof AuthenticatedOrgsRoute
   AuthenticatedTimelineRoute: typeof AuthenticatedTimelineRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAiRoute: AuthenticatedAiRoute,
   AuthenticatedCharactersRoute: AuthenticatedCharactersRoute,
+  AuthenticatedFandomRoute: AuthenticatedFandomRoute,
   AuthenticatedIngestRoute: AuthenticatedIngestRoute,
   AuthenticatedOrgsRoute: AuthenticatedOrgsRoute,
   AuthenticatedTimelineRoute: AuthenticatedTimelineRoute,
