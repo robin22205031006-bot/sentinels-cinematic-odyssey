@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (s: Record<string, unknown>): { next?: string } => (typeof s["next"] === "string" ? { next: s["next"] } : {}),
   head: () => ({
     meta: [
       { title: "Admin sign in — SCU" },
@@ -20,6 +22,9 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const nav = useNavigate();
+  const { next: rawNext } = Route.useSearch();
+  const next = oauthReturnPath(rawNext);
+  const hasNext = rawNext !== undefined && next !== "/";
   const [mode, setMode] = useState<"in" | "up">("in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,9 +40,10 @@ function AuthPage() {
         toast.error(error.message);
         return;
       }
-      nav({ to: "/characters" });
+      if (hasNext) window.location.assign(next);
+      else nav({ to: "/characters" });
     } else {
-      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });
+      const { error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: hasNext ? new URL(next, window.location.origin).href : window.location.origin } });
       setBusy(false);
       if (error) {
         toast.error(error.message);
