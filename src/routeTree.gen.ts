@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CharactersRouteImport } from './routes/characters'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as OrgsRouteImport } from './routes/orgs'
 import { Route as TimelineRouteImport } from './routes/timeline'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedIngestRouteImport } from './routes/_authenticated/ingest'
 
 const IndexRoute = IndexRouteImport.update({
@@ -36,6 +38,11 @@ const CharactersRoute = CharactersRouteImport.update({
   path: '/characters',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrgsRoute = OrgsRouteImport.update({
   id: '/orgs',
   path: '/orgs',
@@ -46,6 +53,12 @@ const TimelineRoute = TimelineRouteImport.update({
   path: '/timeline',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedIngestRoute = AuthenticatedIngestRouteImport.update({
   id: '/ingest',
   path: '/ingest',
@@ -56,16 +69,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/characters': typeof CharactersRoute
+  '/mcp': typeof McpRoute
   '/orgs': typeof OrgsRoute
   '/timeline': typeof TimelineRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/ingest': typeof AuthenticatedIngestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/characters': typeof CharactersRoute
+  '/mcp': typeof McpRoute
   '/orgs': typeof OrgsRoute
   '/timeline': typeof TimelineRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/ingest': typeof AuthenticatedIngestRoute
 }
 export interface FileRoutesById {
@@ -74,23 +91,43 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/characters': typeof CharactersRoute
+  '/mcp': typeof McpRoute
   '/orgs': typeof OrgsRoute
   '/timeline': typeof TimelineRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/ingest': typeof AuthenticatedIngestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/characters' | '/orgs' | '/timeline' | '/ingest'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/characters'
+    | '/mcp'
+    | '/orgs'
+    | '/timeline'
+    | '/.well-known/oauth-protected-resource'
+    | '/ingest'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/characters' | '/orgs' | '/timeline' | '/ingest'
+  to:
+    | '/'
+    | '/auth'
+    | '/characters'
+    | '/mcp'
+    | '/orgs'
+    | '/timeline'
+    | '/.well-known/oauth-protected-resource'
+    | '/ingest'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/characters'
+    | '/mcp'
     | '/orgs'
     | '/timeline'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/ingest'
   fileRoutesById: FileRoutesById
 }
@@ -99,8 +136,10 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CharactersRoute: typeof CharactersRoute
+  McpRoute: typeof McpRoute
   OrgsRoute: typeof OrgsRoute
   TimelineRoute: typeof TimelineRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CharactersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orgs': {
       id: '/orgs'
       path: '/orgs'
@@ -145,6 +191,13 @@ declare module '@tanstack/react-router' {
       path: '/timeline'
       fullPath: '/timeline'
       preLoaderRoute: typeof TimelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/ingest': {
@@ -173,8 +226,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CharactersRoute: CharactersRoute,
+  McpRoute: McpRoute,
   OrgsRoute: OrgsRoute,
   TimelineRoute: TimelineRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
