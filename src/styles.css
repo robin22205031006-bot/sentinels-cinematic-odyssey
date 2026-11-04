@@ -46,6 +46,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
+  --color-glow: var(--glow);
   --color-status-alive: var(--status-alive);
   --color-status-dead: var(--status-dead);
   --color-status-neutral: var(--status-neutral);
@@ -144,4 +145,60 @@
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }
+}
+
+:root {
+  --glow: oklch(0.7 0.1 70);
+  --glow-strength: 0;
+  --glass-blur: 0px;
+}
+
+@utility glass {
+  background-color: var(--card);
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%);
+  border: 1px solid var(--border);
+}
+
+@utility glow-ring {
+  box-shadow: 0 0 calc(24px * var(--glow-strength)) -6px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+
+@utility glow-text {
+  text-shadow: 0 0 calc(18px * var(--glow-strength)) color-mix(in oklab, var(--accent) 60%, transparent);
+}
+
+@utility ambient-bg {
+  background-image:
+    radial-gradient(60rem 40rem at 10% -10%, color-mix(in oklab, var(--accent) calc(18% * var(--glow-strength)), transparent), transparent),
+    radial-gradient(50rem 40rem at 110% 10%, color-mix(in oklab, var(--glow) calc(16% * var(--glow-strength)), transparent), transparent);
+  background-attachment: fixed;
+}
+
+@utility neu-input {
+  background-color: var(--background);
+  box-shadow:
+    inset 3px 3px 7px color-mix(in oklab, black 30%, transparent),
+    inset -3px -3px 7px color-mix(in oklab, white 6%, transparent);
+  border: none;
+}
+
+@keyframes scu-morph-in {
+  from { opacity: 0; transform: scale(0.96); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@utility morph-in {
+  animation: scu-morph-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes scu-corner {
+  from { transform: translate(var(--from-x, 0), var(--from-y, 0)) scale(var(--from-s, 1)); }
+  to { transform: none; }
+}
+@utility corner-shift {
+  animation: scu-corner 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  will-change: transform;
+}
+
+@layer base {
+  body { transition: background-color 0.4s ease; }
 }
