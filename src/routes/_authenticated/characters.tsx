@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { EntitySection } from "@/components/entity-section";
+import { CHARACTER_CATEGORIES } from "@/lib/entities";
 
 export const Route = createFileRoute("/_authenticated/characters")({
+  validateSearch: (s: Record<string, unknown>): { q?: string } => (typeof s["q"] === "string" ? { q: s["q"] } : {}),
   head: () => ({
     meta: [
       { title: "Characters — Sentinels Cinematic Universe" },
@@ -10,7 +12,13 @@ export const Route = createFileRoute("/_authenticated/characters")({
       { property: "og:description", content: "Dossiers for every character in the Sentinels Cinematic Universe." },
     ],
   }),
-  component: () => (
-    <EntitySection kinds={["character"]} title="Characters" subtitle="Tap a dossier to open it." />
-  ),
+  component: Characters,
 });
+
+function Characters() {
+  const { q } = Route.useSearch();
+  return (
+    <EntitySection kinds={["character"]} categories={CHARACTER_CATEGORIES} initialQuery={q ?? ""}
+      title="Characters" subtitle="Protagonists, antagonists, anti-heroes, anti-villains and support." />
+  );
+}
