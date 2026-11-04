@@ -9,15 +9,24 @@ export function useSession() {
   });
 }
 
-export function useIsAdmin() {
+export function useRoles() {
   const { data: user } = useSession();
   const q = useQuery({
-    queryKey: ["is-admin", user?.id],
+    queryKey: ["roles", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase.rpc("has_role", { _user_id: user!.id, _role: "admin" });
-      return !!data;
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", user!.id);
+      return (data ?? []).map((r) => r.role as string);
     },
   });
-  return !!user && !!q.data;
+  return user ? (q.data ?? []) : [];
+}
+
+export function useIsAdmin() {
+  return useRoles().includes("admin");
+}
+
+export function useIsStaff() {
+  const r = useRoles();
+  return r.includes("admin") || r.includes("moderator");
 }
