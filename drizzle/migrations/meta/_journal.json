@@ -15,6 +15,13 @@
       "when": 1793831282000,
       "tag": "0001_add_moderator_role",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793831313690,
+      "tag": "0002_fandom_vault_tables",
+      "breakpoints": true
     }
   ]
 }
